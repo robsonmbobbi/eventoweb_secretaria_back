@@ -1,6 +1,4 @@
-﻿using EventoWeb.Comum.Negocio.Repositorios;
-using EventoWeb.Secretaria.Aplicacao.Seguranca;
-using EventoWeb.Secretaria.Negocio.Repositorios;
+﻿using EventoWeb.Secretaria.Aplicacao.Seguranca;
 using eventoweb_secretaria_back.Controllers.DTOS;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +14,11 @@ namespace eventoweb_secretaria_back.Controllers
     [ApiController]
     public class AutenticacaoController : ControllerBase
     {
-        private IContexto m_Contexto;
-        private readonly IUsuarios m_Usuarios;
+        private AppUsuarioAutenticacao m_App;
 
-        public AutenticacaoController(IContexto contexto, IUsuarios usuarios)
+        public AutenticacaoController(AppUsuarioAutenticacao app)
         {
-            m_Contexto = contexto;
-            m_Usuarios = usuarios;
+            m_App = app;
         }
 
         [AllowAnonymous]
@@ -30,13 +26,10 @@ namespace eventoweb_secretaria_back.Controllers
         public DTWAutenticacao? Autenticar([FromBody] DTWDadosAutenticacao dadosAutenticacao,
             [FromServices] ConfiguracaoAutorizacao configuracaoAutorizacao)
         {
-            var app = new AppUsuarioAutenticacao(m_Contexto, m_Usuarios)
-            {
-                Login = dadosAutenticacao.Login,
-                Senha = dadosAutenticacao.Senha
-            };
+            m_App.Login = dadosAutenticacao.Login;
+            m_App.Senha = dadosAutenticacao.Senha;
 
-            var usuario = app.Autenticar();
+            var usuario = m_App.Autenticar();
             if (usuario != null)
                 return new DTWAutenticacao
                 {
@@ -57,12 +50,12 @@ namespace eventoweb_secretaria_back.Controllers
 
         private static string GerarTokenApi(ConfiguracaoAutorizacao configuracaoAutorizacao, DTOUsuario usuario)
         {
-            ClaimsIdentity identidade = new ClaimsIdentity(
+            ClaimsIdentity identidade = new(
                     new GenericIdentity(usuario.Login, "Login"),
-                    new[] {
+                    [
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                         new Claim(JwtRegisteredClaimNames.UniqueName, usuario.Login)
-                    }
+                    ]
                 );
 
             if (usuario.EhAdministrador)
