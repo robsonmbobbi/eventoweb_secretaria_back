@@ -12,6 +12,7 @@ using EventoWeb.Comum.Persistencia.MigracoesBD;
 using EventoWeb.Comum.Persistencia.Repositorios;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
+using EventoWeb.Secretaria.Persistencia.MigracoesBD;
 using EventoWeb.Secretaria.Persistencia.Repositorios;
 using eventoweb_secretaria_back;
 using eventoweb_secretaria_back.Logging;
@@ -57,7 +58,10 @@ builder.Services
     .ConfigureRunner(rb => rb
         .AddMySql5()
         .WithGlobalConnectionString(connectionString)
-        .ScanIn([typeof(Migracao01).Assembly]).For.Migrations())
+        .ScanIn([
+            typeof(Migracao01).Assembly,
+            typeof(UserMigration).Assembly
+        ]).For.Migrations())
     .AddLogging(lb => lb.AddFluentMigratorConsole());
 
 builder.Services.AddSingleton<ISessionFactory>(_ =>

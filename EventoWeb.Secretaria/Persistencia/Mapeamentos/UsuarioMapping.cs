@@ -12,7 +12,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             this.Id(x => x.Login, m =>
             {
                 m.Access(Accessor.Property);
-                m.Column("LOGIN");
+                m.Column("login");
                 m.Length(150);
                 m.Generator(Generators.Assigned);
             });
@@ -20,7 +20,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Property(x => x.Nome, m =>
             {
                 m.Access(Accessor.NoSetter);
-                m.Column("NOME");
+                m.Column("nome");
                 m.NotNullable(true);
                 m.Length(100);
             });
@@ -31,7 +31,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
                 c.Property("m_Senha", m =>
                 {
                     m.Access(Accessor.Field);
-                    m.Column("SENHA");
+                    m.Column("senha");
                     m.NotNullable(true);
                     m.Length(32);
                 });
@@ -40,7 +40,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Property(x => x.EhAdministrador, m =>
             {
                 m.Access(Accessor.Property);
-                m.Column("EH_ADMINISTRADOR");
+                m.Column("eh_administrador");
                 m.NotNullable(true);
             });
         }
