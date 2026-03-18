@@ -10,6 +10,7 @@ using EventoWeb.Comum.Persistencia.Integracoes.Asaas;
 using EventoWeb.Comum.Persistencia.Mapeamentos;
 using EventoWeb.Comum.Persistencia.MigracoesBD;
 using EventoWeb.Comum.Persistencia.Repositorios;
+using EventoWeb.Secretaria.Aplicacao.Inscricoes;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
 using EventoWeb.Secretaria.Persistencia.MigracoesBD;
@@ -122,6 +123,8 @@ builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
 builder.Services.AddScoped<AppPrecoInscricaoObtencaoIdade>();
 builder.Services.AddScoped<AppPedidoInclusao>();
 builder.Services.AddScoped<AppFormasPagamentoListagem>();
+builder.Services.AddScoped<EventoWeb.Secretaria.Aplicacao.Pedidos.AppPedidoObtencao>();
+builder.Services.AddScoped<AppInscricaoListagem>();
 
 builder.Services.AddScoped<AppUsuarioAutenticacao>();
 
