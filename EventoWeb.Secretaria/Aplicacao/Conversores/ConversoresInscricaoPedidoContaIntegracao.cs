@@ -3,12 +3,27 @@ using EventoWeb.Comum.Negocio.Entidades.Financeiro;
 using EventoWeb.Comum.Negocio.Entidades.IntegracaoFinanceira;
 using EventoWeb.Comum.Aplicacao.Inscricoes;
 using EventoWeb.Comum.Aplicacao.FormasPagamento;
-using EventoWeb.Secretaria.Aplicacao.DTOs;
+using EventoWeb.Secretaria.Aplicacao.Pedidos;
+using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 
 namespace EventoWeb.Secretaria.Aplicacao.Conversores
 {
     public static class ConversoresInscricaoPedidoContaIntegracao
     {
+        public static DTOPedido Converter(this Pedido pedido)
+        {
+            return new DTOPedido
+            {
+                Id = pedido.Id,
+                Valor = pedido.Valor.Valor,
+                Tipo = pedido.Tipo,
+                FormaPagamento = pedido.FormaPagamento?.Converter(),
+                Inscricoes = pedido.Inscricoes?.Select(i => i.Converter()).ToList() ?? [],
+                Pagador = pedido.Pagador.Converter(),
+                Conta = pedido.Conta.Converter()
+            };
+        }
+
         public static DTOPedidoCompleto ConverterPedidoCompleto(this Pedido pedido)
         {
             return new DTOPedidoCompleto

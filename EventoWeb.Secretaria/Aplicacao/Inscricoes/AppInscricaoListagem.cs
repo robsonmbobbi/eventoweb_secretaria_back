@@ -10,15 +10,15 @@ namespace EventoWeb.Secretaria.Aplicacao.Inscricoes
         {
         }
 
-        public List<DTOInscricao> Listar(int idEvento, EnumSituacaoInscricao situacao)
+        public List<DTOInscricaoListagem> Listar(int idEvento, EnumSituacaoInscricao situacao)
         {
-            var lista = new List<DTOInscricao>();
+            var lista = new List<DTOInscricaoListagem>();
 
             ExecutarSeguramente(() =>
             {
                 lista = [.. Inscricoes
                     .ListarPorSituacao(idEvento, situacao)
-                    .Select(x => x.Converter())];
+                    .Select(x => x.ConverterParaListagem())];
             });
 
             return lista;

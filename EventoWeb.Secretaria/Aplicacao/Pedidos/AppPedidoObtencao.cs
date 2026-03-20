@@ -4,7 +4,7 @@ using EventoWeb.Comum.Negocio.Entidades.IntegracaoFinanceira;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Aplicacao;
 using EventoWeb.Secretaria.Aplicacao.Conversores;
-using EventoWeb.Secretaria.Aplicacao.DTOs;
+using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 
 namespace EventoWeb.Secretaria.Aplicacao.Pedidos
 {
@@ -25,59 +25,20 @@ namespace EventoWeb.Secretaria.Aplicacao.Pedidos
             m_RegistrosIntegracao = registrosIntegracao ?? throw new ArgumentNullException(nameof(registrosIntegracao));
         }
 
-        public DTOInscricaoPedidoContaIntegracao? ObterInscricaoComDados(int idInscricao)
+        public DTOPedido? ObterPorInscricao(int idInscricao)
         {
-            DTOInscricaoPedidoContaIntegracao? resultado = null;
+            DTOPedido? resultado = null;
 
             ExecutarSeguramente(() =>
             {
-                /*var pedido = m_Pedidos.ObterPorInscricao(idInscricao) ?? 
-                    throw new Exception($"Nenhum pedido foi encontrado para essa inscrição. Id Inscrição {idInscricao}");
-
-
-
-                var inscricao = m_Inscricoes.Obter(idInscricao);
-                if (inscricao == null)
-                    return;
-
-                resultado = new DTOInscricaoPedidoContaIntegracao
-                {
-                    Inscricao = inscricao.ToResumidoDTO()
-                };
-
-                // Buscar pedido vinculado à inscrição
-                
+                var pedido = m_Pedidos.ObterPorInscricao(idInscricao);
                 if (pedido != null)
                 {
-                    resultado.Pedido = pedido.ToResumidoDTO();
-
-                    // Buscar conta do pedido
-                    var conta = pedido.Conta;
-                    if (conta != null)
-                    {
-                        resultado.Conta = conta.Converter();
-
-                        // Buscar registro de integração da conta
-                        var registroIntegracao = BuscarRegistroIntegracaoPorConta(conta);
-                        if (registroIntegracao != null)
-                        {
-                            resultado.RegistroIntegracao = registroIntegracao.Converter();
-                        }
-                    }
-                }*/
+                    resultado = pedido.Converter();
+                }
             });
 
             return resultado;
-        }
-
-        private Pedido? BuscarPedidoPorInscricao(Inscricao inscricao)
-        {
-            return m_Pedidos.ObterPorInscricao(inscricao.Id);
-        }
-
-        private RegistroIntegracaoFinanceira? BuscarRegistroIntegracaoPorConta(Conta conta)
-        {
-            return m_RegistrosIntegracao.ObterPorConta(conta.Id);
         }
     }
 }
