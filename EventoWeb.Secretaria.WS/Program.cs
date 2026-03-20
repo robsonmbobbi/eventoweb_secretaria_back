@@ -3,6 +3,7 @@ using EventoWeb.Comum.Aplicacao.FormasPagamento;
 using EventoWeb.Comum.Aplicacao.Inscricoes;
 using EventoWeb.Comum.Aplicacao.Pedidos;
 using EventoWeb.Comum.Aplicacao.Precos;
+using EventoWeb.Comum.Negocio.Entidades;
 using EventoWeb.Comum.Negocio.Entidades.IntegracaoFinanceira;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Negocio.Servicos;
@@ -11,6 +12,8 @@ using EventoWeb.Comum.Persistencia.Mapeamentos;
 using EventoWeb.Comum.Persistencia.MigracoesBD;
 using EventoWeb.Comum.Persistencia.Repositorios;
 using EventoWeb.Secretaria.Aplicacao.Inscricoes;
+using EventoWeb.Secretaria.Aplicacao.Pedidos;
+using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
 using EventoWeb.Secretaria.Persistencia.MigracoesBD;
@@ -118,13 +121,32 @@ builder.Services.AddScoped<AppEventoCalcularIdade>();
 builder.Services.AddScoped<AppEventoObtencao>();
 builder.Services.AddScoped<AppInscricaoInclusao>();
 builder.Services.AddScoped<AppInscricaoAtualizacao>();
+builder.Services.AddScoped<AppInscricaoAtualizacaoSituacao>();
 builder.Services.AddScoped<AppInscricaoObtencao>();
 builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
 builder.Services.AddScoped<AppPrecoInscricaoObtencaoIdade>();
 builder.Services.AddScoped<AppPedidoInclusao>();
 builder.Services.AddScoped<AppFormasPagamentoListagem>();
-builder.Services.AddScoped<EventoWeb.Secretaria.Aplicacao.Pedidos.AppPedidoObtencao>();
+builder.Services.AddScoped<AppPedidoObtencao>();
+builder.Services.AddScoped<AppPedidoInclusao>();
+
+builder.Services.AddScoped<IEnumerable<IValidacao<Inscricao>>>(provider =>
+{
+    var validacoes = new List<IValidacao<Inscricao>>() 
+    {
+        new ValidacaoInscricaoDadosPessoa(),
+        new ValidacaoInscricaoPessoaJaInscrita(provider.GetRequiredService<IInscricoes>())
+    };
+
+    return validacoes;
+});
 builder.Services.AddScoped<AppInscricaoListagem>();
+builder.Services.AddScoped<AppInscricaoInclusao>();
+builder.Services.AddScoped<AppInscricaoAtualizacao>();
+builder.Services.AddScoped<AppInscricaoObtencao>();
+builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
+
+builder.Services.AddScoped<AppRegistroIntegracaoObtencao>();
 
 builder.Services.AddScoped<AppUsuarioAutenticacao>();
 
