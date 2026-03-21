@@ -15,6 +15,8 @@ using EventoWeb.Secretaria.Aplicacao.Inscricoes;
 using EventoWeb.Secretaria.Aplicacao.Pedidos;
 using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
+using EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos;
+using EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
 using EventoWeb.Secretaria.Persistencia.MigracoesBD;
 using EventoWeb.Secretaria.Persistencia.Repositorios;
@@ -116,6 +118,7 @@ builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Reg
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().ModelosMensagemNotificacao);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().MensagensNotificacao);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Usuarios);
+builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Contas);
 builder.Services.AddScoped<AppEventoListagem>();
 builder.Services.AddScoped<AppEventoCalcularIdade>();
 builder.Services.AddScoped<AppEventoObtencao>();
@@ -147,6 +150,9 @@ builder.Services.AddScoped<AppInscricaoObtencao>();
 builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
 
 builder.Services.AddScoped<AppRegistroIntegracaoObtencao>();
+builder.Services.AddScoped<SrvCriacaoRegistroIntegracao>();
+builder.Services.AddScoped<SrvNotificacaoNovoPagamento>();
+builder.Services.AddScoped<AppRegistroIntegracaoInclusao>();
 
 builder.Services.AddScoped<AppUsuarioAutenticacao>();
 
