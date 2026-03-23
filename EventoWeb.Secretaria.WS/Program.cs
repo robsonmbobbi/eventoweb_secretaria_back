@@ -8,15 +8,18 @@ using EventoWeb.Comum.Negocio.Entidades.Financeiro;
 using EventoWeb.Comum.Negocio.Entidades.IntegracaoFinanceira;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Negocio.Servicos;
+using EventoWeb.Comum.Negocio.Servicos.Notificacoes.Inscricoes;
 using EventoWeb.Comum.Persistencia.Integracoes.Asaas;
 using EventoWeb.Comum.Persistencia.Mapeamentos;
 using EventoWeb.Comum.Persistencia.MigracoesBD;
 using EventoWeb.Comum.Persistencia.Repositorios;
 using EventoWeb.Secretaria.Aplicacao.Contas;
+using EventoWeb.Secretaria.Aplicacao.ContasBancarias;
 using EventoWeb.Secretaria.Aplicacao.Inscricoes;
 using EventoWeb.Secretaria.Aplicacao.Pedidos;
 using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
+using EventoWeb.Secretaria.Negocio.Repositorios;
 using EventoWeb.Secretaria.Negocio.Servicos.Contas;
 using EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos;
 using EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao;
@@ -123,25 +126,10 @@ builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Men
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Usuarios);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Contas);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().ContasBancarias);
-builder.Services.AddScoped<AppEventoListagem>();
-builder.Services.AddScoped<AppEventoCalcularIdade>();
-builder.Services.AddScoped<AppEventoObtencao>();
-builder.Services.AddScoped<AppInscricaoInclusao>();
-builder.Services.AddScoped<AppInscricaoAtualizacao>();
-builder.Services.AddScoped<AppInscricaoAtualizacaoSituacao>();
-builder.Services.AddScoped<SrvLiquidacaoConta>();
-builder.Services.AddScoped<AppContaLiquidacao>();
-builder.Services.AddScoped<AppInscricaoObtencao>();
-builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
-builder.Services.AddScoped<AppPrecoInscricaoObtencaoIdade>();
-builder.Services.AddScoped<AppPedidoInclusao>();
-builder.Services.AddScoped<AppFormasPagamentoListagem>();
-builder.Services.AddScoped<AppPedidoObtencao>();
-builder.Services.AddScoped<AppPedidoInclusao>();
 
 builder.Services.AddScoped<IEnumerable<IValidacao<Inscricao>>>(provider =>
 {
-    var validacoes = new List<IValidacao<Inscricao>>() 
+    var validacoes = new List<IValidacao<Inscricao>>()
     {
         new ValidacaoInscricaoDadosPessoa(),
         new ValidacaoInscricaoPessoaJaInscrita(provider.GetRequiredService<IInscricoes>())
@@ -149,17 +137,37 @@ builder.Services.AddScoped<IEnumerable<IValidacao<Inscricao>>>(provider =>
 
     return validacoes;
 });
+
+
+builder.Services.AddScoped<SrvLiquidacaoConta>();
+builder.Services.AddScoped<SrvCriacaoRegistroIntegracao>();
+builder.Services.AddScoped<SrvConsultaRegistroIntegracao>();
+builder.Services.AddScoped<SrvNotificacaoNovoPagamento>();
+builder.Services.AddScoped<SrvNotificacaoInscricao>();
+
+builder.Services.AddScoped<AppEventoListagem>();
+builder.Services.AddScoped<AppEventoCalcularIdade>();
+builder.Services.AddScoped<AppEventoObtencao>();
+builder.Services.AddScoped<AppContaBancariaListagem>();
+builder.Services.AddScoped<AppInscricaoInclusao>();
+builder.Services.AddScoped<AppInscricaoAtualizacao>();
+builder.Services.AddScoped<AppInscricaoAtualizacaoSituacao>();
+builder.Services.AddScoped<AppInscricaoObtencao>();
+builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
 builder.Services.AddScoped<AppInscricaoListagem>();
 builder.Services.AddScoped<AppInscricaoInclusao>();
 builder.Services.AddScoped<AppInscricaoAtualizacao>();
 builder.Services.AddScoped<AppInscricaoObtencao>();
 builder.Services.AddScoped<AppInscricaoPesquisaPessoa>();
-
+builder.Services.AddScoped<AppPrecoInscricaoObtencaoIdade>();
+builder.Services.AddScoped<AppPedidoInclusao>();
+builder.Services.AddScoped<AppPedidoObtencao>();
+builder.Services.AddScoped<AppPedidoInclusao>();
+builder.Services.AddScoped<AppFormasPagamentoListagem>();
 builder.Services.AddScoped<AppRegistroIntegracaoObtencao>();
-builder.Services.AddScoped<SrvCriacaoRegistroIntegracao>();
-builder.Services.AddScoped<SrvNotificacaoNovoPagamento>();
 builder.Services.AddScoped<AppRegistroIntegracaoInclusao>();
-
+builder.Services.AddScoped<AppRegistroIntegracaoConsulta>();
+builder.Services.AddScoped<AppContaLiquidacao>();
 builder.Services.AddScoped<AppUsuarioAutenticacao>();
 
 builder.Services.AddAuthentication(authOptions =>

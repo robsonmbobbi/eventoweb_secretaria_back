@@ -1,17 +1,18 @@
 using EventoWeb.Comum.Negocio.Entidades.Financeiro;
 using EventoWeb.Comum.Negocio.ObjetosValor;
 using EventoWeb.Comum.Negocio.Repositorios;
+using EventoWeb.Secretaria.Negocio.Repositorios;
 
 namespace EventoWeb.Secretaria.Negocio.Servicos.Contas;
 
 public class SrvLiquidacaoConta
 {
     private readonly IPersistencia<Conta> m_Contas;
-    private readonly IPersistencia<ContaBancaria> m_ContasBancarias;
+    private readonly IContasBancarias m_ContasBancarias;
 
     public SrvLiquidacaoConta(
         IPersistencia<Conta> contas,
-        IPersistencia<ContaBancaria> contasBancarias)
+        IContasBancarias contasBancarias)
     {
         m_Contas = contas ?? throw new ArgumentNullException(nameof(contas));
         m_ContasBancarias = contasBancarias ?? throw new ArgumentNullException(nameof(contasBancarias));

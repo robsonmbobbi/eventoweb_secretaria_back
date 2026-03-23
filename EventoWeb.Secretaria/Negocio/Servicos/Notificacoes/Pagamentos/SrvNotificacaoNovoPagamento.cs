@@ -45,7 +45,7 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos
                     JsonSerializer.Serialize(
                         new
                         {
-                            NomeEvento = modelo.Evento.Nome,
+                            NomeEvento = modelo.Evento.Nome.Nome,
                             TipoTransacao = tipoTransacao,
                             dadosRetorno.Valor,
                             dadosRetorno.LinkPagamento,

@@ -16,5 +16,5 @@ public class ContextoSecretariaNH : ContextoNH
     }
 
     public IUsuarios Usuarios => new UsuariosNH(m_Sessao);
-    public IPersistencia<ContaBancaria> ContasBancarias => new PersistenciaNH<ContaBancaria>(m_Sessao);
+    public IContasBancarias ContasBancarias => new ContasBancariasNH(m_Sessao);
 }
