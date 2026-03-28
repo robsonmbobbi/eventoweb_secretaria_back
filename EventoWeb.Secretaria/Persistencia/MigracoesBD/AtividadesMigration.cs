@@ -3,7 +3,7 @@ using FluentMigrator;
 
 namespace EventoWeb.Secretaria.Persistencia.MigracoesBD
 {
-    [Migration(202603262250)]
+    [Migration(202603281712)]
     public class AtividadesMigration : Migration
     {
         public override void Down()

@@ -19,4 +19,5 @@ public class ContextoSecretariaNH : ContextoNH
     public IUsuarios Usuarios => new UsuariosNH(m_Sessao);
     public IContasBancarias ContasBancarias => new ContasBancariasNH(m_Sessao);
     public IAtividades Atividades => new AtividadesNH(m_Sessao);
+    public IQuartos Quartos => new QuartosNH(m_Sessao);
 }

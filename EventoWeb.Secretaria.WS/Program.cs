@@ -13,10 +13,12 @@ using EventoWeb.Comum.Persistencia.Integracoes.Asaas;
 using EventoWeb.Comum.Persistencia.Mapeamentos;
 using EventoWeb.Comum.Persistencia.MigracoesBD;
 using EventoWeb.Comum.Persistencia.Repositorios;
+using EventoWeb.Secretaria.Aplicacao.Atividades;
 using EventoWeb.Secretaria.Aplicacao.Contas;
 using EventoWeb.Secretaria.Aplicacao.ContasBancarias;
 using EventoWeb.Secretaria.Aplicacao.Inscricoes;
 using EventoWeb.Secretaria.Aplicacao.Pedidos;
+using EventoWeb.Secretaria.Aplicacao.Quartos;
 using EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao;
 using EventoWeb.Secretaria.Aplicacao.Seguranca;
 using EventoWeb.Secretaria.Negocio.Repositorios;
@@ -131,6 +133,7 @@ builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Usu
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Contas);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().ContasBancarias);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Atividades);
+builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Quartos);
 
 builder.Services.AddScoped<IEnumerable<IValidacao<Inscricao>>>(provider =>
 {
@@ -178,6 +181,12 @@ builder.Services.AddScoped<AppUsuarioAutenticacao>();
 // Relatórios
 builder.Services.AddScoped<IRelatorioGerador<Atividade>, DivisaoAtividadeRelatorio>();
 builder.Services.AddScoped<AppDivisaoAtividadeRelatorio>();
+
+// Quartos
+builder.Services.AddScoped<AppDivisaoAutomaticaQuartos>();
+
+// Atividades
+builder.Services.AddScoped<AppDivisaoAutomaticaAtividades>();
 
 builder.Services.AddAuthentication(authOptions =>
 {

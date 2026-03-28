@@ -23,22 +23,22 @@ public class AppDivisaoAtividadeRelatorio
     /// <summary>
     /// Gera relatório em PDF com as divisões de uma atividade.
     /// </summary>
-    /// <param name="actividadeId">ID da atividade.</param>
+    /// <param name="idAtividade">ID da atividade.</param>
     /// <param name="detalhar">Se true, inclui ID de inscrição, cidade e UF.</param>
     /// <returns>Array de bytes contendo o PDF.</returns>
     /// <exception cref="ArgumentException">Lançada quando a atividade não é encontrada ou não possui divisões.</exception>
-    public async Task<byte[]> GerarRelatorioAsync(long actividadeId, bool detalhar)
+    public async Task<byte[]> GerarRelatorioAsync(int idAtividade, bool detalhar)
     {
-        var atividade = _repositorioAtividades.Obter((int)actividadeId);
+        var atividade = _repositorioAtividades.Obter(idAtividade);
 
         if (atividade == null)
         {
-            throw new ArgumentException($"Atividade com ID {actividadeId} não encontrada.");
+            throw new ArgumentException($"Atividade com ID {idAtividade} não encontrada.");
         }
 
         if (!atividade.Divisoes.Any())
         {
-            throw new ArgumentException($"A atividade com ID {actividadeId} não possui divisões cadastradas.");
+            throw new ArgumentException($"A atividade com ID {idAtividade} não possui divisões cadastradas.");
         }
 
         return await _relatorioGerador.GerarPdfAsync(atividade, detalhar);

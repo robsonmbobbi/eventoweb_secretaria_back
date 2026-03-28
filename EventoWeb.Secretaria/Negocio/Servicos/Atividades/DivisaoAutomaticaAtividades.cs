@@ -1,21 +1,17 @@
-﻿using EventoWeb.    Comum.Negocio.Entidades;
+﻿using EventoWeb.Comum.Negocio.Entidades;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Secretaria.Negocio.Entidades.Atividades;
 using EventoWeb.Secretaria.Negocio.Repositorios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EventoWeb.Secretaria.Negocio.Servicos.Atividades
 {
-    public class DivisaoAutomaticaInscricoesParticipantePorOficinaOrdem
+    public class DivisaoAutomaticaAtividades
     {
         private Evento m_Evento;
         private IInscricoes m_Inscricoes;
         private IAtividades m_Atividades;
 
-        public DivisaoAutomaticaInscricoesParticipantePorOficinaOrdem(Evento evento, IInscricoes inscricoes, IAtividades atividades)
+        public DivisaoAutomaticaAtividades(Evento evento, IInscricoes inscricoes, IAtividades atividades)
         {
             m_Evento = evento;
             m_Inscricoes = inscricoes;
