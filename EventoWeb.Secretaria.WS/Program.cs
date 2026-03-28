@@ -26,6 +26,10 @@ using EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
 using EventoWeb.Secretaria.Persistencia.MigracoesBD;
 using EventoWeb.Secretaria.Persistencia.Repositorios;
+using EventoWeb.Secretaria.Negocio.Entidades.Atividades;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Servicos;
+using EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes;
 using eventoweb_secretaria_back;
 using eventoweb_secretaria_back.Logging;
 using FluentMigrator.Runner;
@@ -126,6 +130,7 @@ builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Men
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Usuarios);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Contas);
 builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().ContasBancarias);
+builder.Services.AddScoped(p => p.GetRequiredService<ContextoSecretariaNH>().Atividades);
 
 builder.Services.AddScoped<IEnumerable<IValidacao<Inscricao>>>(provider =>
 {
@@ -169,6 +174,10 @@ builder.Services.AddScoped<AppRegistroIntegracaoInclusao>();
 builder.Services.AddScoped<AppRegistroIntegracaoConsulta>();
 builder.Services.AddScoped<AppContaLiquidacao>();
 builder.Services.AddScoped<AppUsuarioAutenticacao>();
+
+// Relatórios
+builder.Services.AddScoped<IRelatorioGerador<Atividade>, DivisaoAtividadeRelatorio>();
+builder.Services.AddScoped<AppDivisaoAtividadeRelatorio>();
 
 builder.Services.AddAuthentication(authOptions =>
 {

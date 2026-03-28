@@ -2,6 +2,7 @@ using EventoWeb.Comum.Negocio.Entidades.Financeiro;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Persistencia.Repositorios;
 using EventoWeb.Secretaria.Negocio.Repositorios;
+using EventoWeb.Secretaria.Negocio.Entidades.Atividades;
 using NHibernate;
 
 namespace EventoWeb.Secretaria.Persistencia.Repositorios;
@@ -17,4 +18,5 @@ public class ContextoSecretariaNH : ContextoNH
 
     public IUsuarios Usuarios => new UsuariosNH(m_Sessao);
     public IContasBancarias ContasBancarias => new ContasBancariasNH(m_Sessao);
+    public IAtividades Atividades => new AtividadesNH(m_Sessao);
 }

@@ -13,3 +13,5 @@
 /EventoWeb.Secretaria.WS/Properties/PublishProfiles
 /EventoWeb.Secretaria.WS/dotnet-tools.json
 /EventoWeb.Secretaria/bin/Release/net9.0
+/EventoWeb.Secretaria.Relatorios/bin/Debug/net9.0
+/EventoWeb.Secretaria.Relatorios/obj
