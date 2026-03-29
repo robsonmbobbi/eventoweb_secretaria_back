@@ -1,4 +1,5 @@
 using EventoWeb.Secretaria.Aplicacao.Quartos;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Servicos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace EventoWeb.Secretaria.WS.Controllers
     public class QuartosController : ControllerBase
     {
         private readonly AppDivisaoAutomaticaQuartos _appDivisao;
+        private readonly AppRelatorioQuartos _appRelatorio;
 
-        public QuartosController(AppDivisaoAutomaticaQuartos appDivisao)
+        public QuartosController(AppDivisaoAutomaticaQuartos appDivisao, AppRelatorioQuartos appRelatorio)
         {
             _appDivisao = appDivisao ?? throw new ArgumentNullException(nameof(appDivisao));
+            _appRelatorio = appRelatorio ?? throw new ArgumentNullException(nameof(appRelatorio));
         }
 
         /// <summary>
@@ -38,6 +41,32 @@ namespace EventoWeb.Secretaria.WS.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "Erro ao realizar divisão de inscrições.", details = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Gera relatório em PDF com a listagem de participantes agrupados por quarto.
+        /// </summary>
+        /// <param name="idEvento">ID do evento para o qual será gerado o relatório.</param>
+        /// <param name="detalhar">Se true, inclui ID de inscrição, cidade e UF no relatório.</param>
+        /// <returns>Arquivo PDF para download.</returns>
+        [HttpGet("relatorio/{idEvento}")]
+        [Authorize("Bearer")]
+        public async Task<IActionResult> GerarRelatorioAsync(int idEvento, [FromQuery] bool detalhar = false)
+        {
+            try
+            {
+                var pdf = await _appRelatorio.GerarRelatorioAsync(idEvento, detalhar);
+                return File(pdf, "application/pdf", $"Relatorio_Quartos_{idEvento}.pdf");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Erro ao gerar relatório de quartos.", details = ex.Message });
             }
         }
     }

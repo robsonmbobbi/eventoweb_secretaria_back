@@ -35,7 +35,7 @@ namespace EventoWeb.Secretaria.Persistencia.MigracoesBD
             Create.Table("quartos_inscritos")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("id_quarto").AsInt32().NotNullable()
-                    .ForeignKey("fk_quartos_inscritos_1", "quartos", "id_quarto").OnUpdate(Rule.Cascade).OnDelete(Rule.Cascade)
+                    .ForeignKey("fk_quartos_inscritos_1", "quartos", "id").OnUpdate(Rule.Cascade).OnDelete(Rule.Cascade)
                 .WithColumn("id_inscricao").AsInt32().NotNullable()
                     .ForeignKey("fk_quartos_inscritos_2", "inscricoes", "id").OnUpdate(Rule.Cascade)
                 .WithColumn("eh_coordenador").AsBoolean().NotNullable();

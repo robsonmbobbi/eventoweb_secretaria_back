@@ -25,7 +25,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
 
             ManyToOne(x => x.Atividade, m =>
             {
-                m.Access(Accessor.Property);
+                m.Access(Accessor.NoSetter);
                 m.Column("id_atividade");
                 m.NotNullable(true);
             });
@@ -40,16 +40,16 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
 
             Component(x => x.FaixaEtaria, c =>
             {
-                c.Access(Accessor.Property);
+                c.Access(Accessor.NoSetter);
                 c.Property(y => y.IdadeMin, m =>
                 {
-                    m.Access(Accessor.Property);
+                    m.Access(Accessor.NoSetter);
                     m.Column("faixa_etaria_min");
                     m.NotNullable(false);
                 });
                 c.Property(y => y.IdadeMax, m =>
                 {
-                    m.Access(Accessor.Property);
+                    m.Access(Accessor.NoSetter);
                     m.Column("faixa_etaria_max");
                     m.NotNullable(false);
                 });

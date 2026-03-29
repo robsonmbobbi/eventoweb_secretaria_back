@@ -3,45 +3,45 @@ using FastReport.Export.PdfSimple;
 using FastReport.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using EventoWeb.Secretaria.Negocio.Entidades.Atividades;
+using EventoWeb.Secretaria.Negocio.Entidades.Quartos;
 using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
 using EventoWeb.Secretaria.Relatorios.Relatorios.Modelos;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes;
 
 /// <summary>
-/// Implementação do gerador de relatório para divisões de atividades usando FastReport.
+/// Implementação do gerador de relatório para quartos usando FastReport.
 /// Geração totalmente programaticamente através da API do FastReport.
 /// </summary>
-public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
+public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
 {
     private const float MARGIN = 10f;
     private const float CM = 37.79f; // pixels por cm
 
     /// <summary>
-    /// Gera um PDF com as divisões de uma atividade.
-    /// Cada divisão é exibida em uma página separada.
+    /// Gera um PDF com a listagem de participantes por quarto.
+    /// Cada quarto é exibido em uma página separada.
     /// </summary>
-    /// <param name="atividade">Atividade contendo as divisões.</param>
+    /// <param name="quartos">Lista de quartos contendo os inscritos.</param>
     /// <param name="detalhar">Se true, inclui ID inscrição, cidade e UF.</param>
     /// <returns>Array de bytes contendo o PDF.</returns>
-    public async Task<byte[]> GerarPdfAsync(Atividade atividade, bool detalhar)
+    public async Task<byte[]> GerarPdfAsync(IList<Quarto> quartos, bool detalhar)
     {
-        return await Task.Run(() => GerarPdf(atividade, detalhar));
+        return await Task.Run(() => GerarPdf(quartos, detalhar));
     }
 
-    private byte[] GerarPdf(Atividade atividade, bool detalhar)
+    private byte[] GerarPdf(IList<Quarto> quartos, bool detalhar)
     {
         try
         {
             // Preparar dados
-            var dados = PrepararDados(atividade, detalhar);
+            var dados = PrepararDados(quartos, detalhar);
 
             // Criar o relatório
             using var report = new Report();
 
             // Registrar dados no relatório
-            report.RegisterData(dados, "Divisoes");
+            report.RegisterData(dados, "Quartos");
 
             // Construir o design do relatório programaticamente
             ConstruirDesignProgramaticamente(report, detalhar);
@@ -65,45 +65,45 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         }
     }
 
-    private Collection<ModeloDivisaoAtividade> PrepararDados(Atividade atividade, bool detalhar)
+    private Collection<ModeloQuartoRelatorio> PrepararDados(IList<Quarto> quartos, bool detalhar)
     {
-        var divisoes = new Collection<ModeloDivisaoAtividade>();
+        var modelosQuartos = new Collection<ModeloQuartoRelatorio>();
 
-        foreach (var divisao in atividade.Divisoes)
+        foreach (var quarto in quartos)
         {
-            var modeloDivisao = new ModeloDivisaoAtividade
+            var modeloQuarto = new ModeloQuartoRelatorio
             {
-                NomeDivisao = divisao.Nome
+                NomeQuarto = quarto.Nome
             };
 
-            // Separar coordenadores de participantes
-            foreach (var participante in divisao.Participantes)
+            // Separar coordenadores de participantes através da propriedade EhCoordenador
+            foreach (var quartoInscrito in quarto.Inscritos)
             {
-                var pessoa = participante.Inscricao.Pessoa;
+                var pessoa = quartoInscrito.Inscricao.Pessoa;
 
                 var modeloParticipante = new ModeloParticipante
                 {
-                    IdInscricao = participante.Inscricao.Id,
-                    Nome = pessoa.Nome.Nome,
+                    IdInscricao = quartoInscrito.Inscricao.Id,
+                    Nome = pessoa.Nome.ToString(),
                     Cidade = detalhar ? pessoa.Cidade : null,
                     UF = detalhar ? pessoa.UF : null,
-                    EhCoordenador = participante.EhCoordenador
+                    EhCoordenador = quartoInscrito.EhCoordenador
                 };
 
-                if (participante.EhCoordenador)
+                if (quartoInscrito.EhCoordenador)
                 {
-                    modeloDivisao.Coordenadores.Add(modeloParticipante);
+                    modeloQuarto.Coordenadores.Add(modeloParticipante);
                 }
                 else
                 {
-                    modeloDivisao.Participantes.Add(modeloParticipante);
+                    modeloQuarto.Participantes.Add(modeloParticipante);
                 }
             }
 
-            divisoes.Add(modeloDivisao);
+            modelosQuartos.Add(modeloQuarto);
         }
 
-        return divisoes;
+        return modelosQuartos;
     }
 
     private void ConstruirDesignProgramaticamente(Report report, bool detalhar)
@@ -113,28 +113,28 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         page.CreateUniqueName();
         report.Pages.Add(page);
 
-        // Criar DataBand principal que itera sobre as divisões
+        // Criar DataBand principal que itera sobre os quartos
         var dataBand = new DataBand();
         dataBand.CreateUniqueName();
-        dataBand.DataSource = report.GetDataSource("Divisoes");
+        dataBand.DataSource = report.GetDataSource("Quartos");
         dataBand.Height = CM * 16; // altura aproximada para múltiplas linhas
-        dataBand.PageBreak = true; // quebra de página após cada divisão
+        dataBand.PageBreak = true; // quebra de página após cada quarto
 
         // Variável para controlar a posição vertical dentro da banda
         float posY = 0;
 
-        // ===== TÍTULO DA DIVISÃO =====
-        var titleDivisao = new TextObject
+        // ===== TÍTULO DO QUARTO =====
+        var titleQuarto = new TextObject
         {
-            Text = "[Divisoes.NomeDivisao]",
+            Text = "[Quartos.NomeQuarto]",
             Left = MARGIN,
             Top = posY,
             Width = CM * 17, // A4 é 210mm, menos margens
             Height = CM * 0.8f
         };
-        titleDivisao.CreateUniqueName();
-        titleDivisao.Font = new Font("Arial", 14, FontStyle.Bold);
-        dataBand.Objects.Add(titleDivisao);
+        titleQuarto.CreateUniqueName();
+        titleQuarto.Font = new Font("Arial", 14, FontStyle.Bold);
+        dataBand.Objects.Add(titleQuarto);
 
         posY += CM * 1;
 
@@ -156,7 +156,7 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         // ===== DATABND COORDENADORES =====
         var coordBand = new DataBand();
         coordBand.CreateUniqueName();
-        coordBand.DataSource = report.GetDataSource("Divisoes.Coordenadores");
+        coordBand.DataSource = report.GetDataSource("Quartos.Coordenadores");
         coordBand.Height = CM * 0.4f;
         coordBand.Left = MARGIN;
         coordBand.Top = posY;
@@ -166,8 +166,8 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         var coordText = new TextObject
         {
             Text = detalhar
-                ? "[Divisoes.Coordenadores.Nome] (Id: [Divisoes.Coordenadores.IdInscricao], [Divisoes.Coordenadores.Cidade]/[Divisoes.Coordenadores.UF])"
-                : "[Divisoes.Coordenadores.Nome]",
+                ? "[Quartos.Coordenadores.Nome] (Id: [Quartos.Coordenadores.IdInscricao], [Quartos.Coordenadores.Cidade]/[Quartos.Coordenadores.UF])"
+                : "[Quartos.Coordenadores.Nome]",
             Left = CM * 0.5f,
             Top = 0,
             Width = CM * 16.5f,
@@ -202,7 +202,7 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         // ===== DATABND PARTICIPANTES =====
         var partBand = new DataBand();
         partBand.CreateUniqueName();
-        partBand.DataSource = report.GetDataSource("Divisoes.Participantes");
+        partBand.DataSource = report.GetDataSource("Quartos.Participantes");
         partBand.Height = CM * 0.4f;
         partBand.Left = MARGIN;
         partBand.Top = posY;
@@ -212,8 +212,8 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
         var partText = new TextObject
         {
             Text = detalhar
-                ? "[Divisoes.Participantes.Nome] (Id: [Divisoes.Participantes.IdInscricao], [Divisoes.Participantes.Cidade]/[Divisoes.Participantes.UF])"
-                : "[Divisoes.Participantes.Nome]",
+                ? "[Quartos.Participantes.Nome] (Id: [Quartos.Participantes.IdInscricao], [Quartos.Participantes.Cidade]/[Quartos.Participantes.UF])"
+                : "[Quartos.Participantes.Nome]",
             Left = CM * 0.5f,
             Top = 0,
             Width = CM * 16.5f,
@@ -225,7 +225,7 @@ public class DivisaoAtividadeRelatorio : IRelatorioGerador<Atividade>
 
         dataBand.Objects.Add(partBand);
 
-        // Adicionar a DataBand principal à página
+        // Adicionar DataBand à página
         page.Bands.Add(dataBand);
     }
 }
