@@ -100,7 +100,7 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
             }
 
             if (!EstaNaListaDeParticipantes(participante))
-                m_Participantes.Add(new DivisaoAtividadeParticipante(participante, ehCoordenador));
+                m_Participantes.Add(new DivisaoAtividadeParticipante(this, participante, ehCoordenador));
         }
 
         public virtual void RemoverParticipante(DivisaoAtividadeParticipante participante)

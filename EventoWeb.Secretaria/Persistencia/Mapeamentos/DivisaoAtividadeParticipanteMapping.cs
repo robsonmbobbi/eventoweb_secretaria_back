@@ -22,6 +22,13 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
                 });
             });
 
+            ManyToOne(x => x.Divisao, m =>
+            {
+                m.Access(Accessor.Property);
+                m.Column("id_divisao_atividade");
+                m.NotNullable(true);
+            });
+
             ManyToOne(x => x.Inscricao, m =>
             {
                 m.Access(Accessor.Property);

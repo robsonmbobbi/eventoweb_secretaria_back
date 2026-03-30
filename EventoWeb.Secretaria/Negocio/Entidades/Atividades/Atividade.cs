@@ -32,8 +32,8 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
         }
 
         public virtual EnumTipoInscricao TipoInscricao { get; set; }
-        public virtual IEnumerable<AtividadeTipoParticipante> TipoParticipantes { get; protected set; }
-        public virtual IEnumerable<DivisaoAtividade> Divisoes { get; protected set; }
+        public virtual IEnumerable<AtividadeTipoParticipante> TipoParticipantes => m_TipoParticipantes;
+        public virtual IEnumerable<DivisaoAtividade> Divisoes => m_Divisoes;
 
 
         public void AdicionarTipoParticipante(EnumTipoParticipante tipoParticipante)

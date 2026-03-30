@@ -39,7 +39,7 @@ namespace EventoWeb.Secretaria.WS.Controllers
         /// <response code="401">Usuário não autenticado</response>
         /// <response code="500">Erro interno do servidor</response>
         [HttpPost("dividir/{idEvento}/{idAtividade}")]
-        [Authorize("Bearer")]
+        //[Authorize("Bearer")]
         public ActionResult<List<DTODivisaoAtividade>> Dividir(int idEvento, int idAtividade)
         {
             try

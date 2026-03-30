@@ -25,8 +25,9 @@ namespace EventoWeb.Secretaria.WS.Controllers
         /// <param name="idAtividade">ID da atividade.</param>
         /// <param name="detalhar">Se true, inclui ID de inscrição, cidade e UF dos participantes.</param>
         /// <returns>Arquivo PDF contendo o relatório.</returns>
-        [HttpGet("gerar-pdf/{actividadeId}")]
-        [Authorize("Bearer")]
+        [HttpGet("gerar-pdf/{idAtividade}")]
+        [Produces("application/pdf", "application/json")]
+        //[Authorize("Bearer")]
         public async Task<ActionResult> GerarPdf(int idAtividade, [FromQuery] bool detalhar = false)
         {
             try

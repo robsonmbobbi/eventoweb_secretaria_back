@@ -1,11 +1,12 @@
+using EventoWeb.Secretaria.Negocio.Entidades.Quartos;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
+using EventoWeb.Secretaria.Relatorios.Relatorios.Modelos;
 using FastReport;
+using FastReport.Data;
 using FastReport.Export.PdfSimple;
 using FastReport.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using EventoWeb.Secretaria.Negocio.Entidades.Quartos;
-using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
-using EventoWeb.Secretaria.Relatorios.Relatorios.Modelos;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes;
 
@@ -41,7 +42,7 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
             using var report = new Report();
 
             // Registrar dados no relatório
-            report.RegisterData(dados, "Quartos");
+            report.Dictionary.RegisterBusinessObject(dados, "Quartos", 10, true);
 
             // Construir o design do relatório programaticamente
             ConstruirDesignProgramaticamente(report, detalhar);
@@ -118,96 +119,90 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
         dataBand.CreateUniqueName();
         dataBand.DataSource = report.GetDataSource("Quartos");
         dataBand.Height = CM * 16; // altura aproximada para múltiplas linhas
-        dataBand.PageBreak = true; // quebra de página após cada quarto
+        dataBand.StartNewPage = true; // quebra de página após cada quarto
+        dataBand.Parent = page;
 
-        // Variável para controlar a posição vertical dentro da banda
-        float posY = 0;
-
-        // ===== TÍTULO DO QUARTO =====
-        var titleQuarto = new TextObject
+        // ===== TÍTULO DA DIVISÃO =====
+        var titleDivisao = new TextObject
         {
             Text = "[Quartos.NomeQuarto]",
             Left = MARGIN,
-            Top = posY,
+            Top = 0f,
             Width = CM * 17, // A4 é 210mm, menos margens
             Height = CM * 0.8f
         };
-        titleQuarto.CreateUniqueName();
-        titleQuarto.Font = new Font("Arial", 14, FontStyle.Bold);
-        dataBand.Objects.Add(titleQuarto);
+        titleDivisao.CreateUniqueName();
+        titleDivisao.Font = new Font("Arial", 16, FontStyle.Bold);
+        dataBand.Objects.Add(titleDivisao);
 
-        posY += CM * 1;
+        // ===== DATABND COORDENADORES =====
+        var coordBand = new DataBand();
+        coordBand.CreateUniqueName();
+        coordBand.DataSource = report.GetDataSource("Quartos.Coordenadores");
+        coordBand.Height = CM * 0.7f;
+        coordBand.Left = MARGIN;
+        coordBand.Width = CM * 17;
+        coordBand.PageBreak = false;
+        coordBand.Parent = dataBand;
+
+        var coordHeaderBand = new DataHeaderBand();
+        coordHeaderBand.Height = CM * 1;
+        coordHeaderBand.CreateUniqueName();
+        coordHeaderBand.Parent = coordBand;
 
         // ===== TÍTULO COORDENADORES =====
         var coordHeader = new TextObject
         {
             Text = "Coordenadores:",
             Left = MARGIN,
-            Top = posY,
+            Top = CM * 0.25f,
             Width = CM * 17,
             Height = CM * 0.5f
         };
         coordHeader.CreateUniqueName();
-        coordHeader.Font = new Font("Arial", 11, FontStyle.Bold);
-        dataBand.Objects.Add(coordHeader);
-
-        posY += CM * 0.6f;
-
-        // ===== DATABND COORDENADORES =====
-        var coordBand = new DataBand();
-        coordBand.CreateUniqueName();
-        coordBand.DataSource = report.GetDataSource("Quartos.Coordenadores");
-        coordBand.Height = CM * 0.4f;
-        coordBand.Left = MARGIN;
-        coordBand.Top = posY;
-        coordBand.Width = CM * 17;
-        coordBand.PageBreak = false;
+        coordHeader.Font = new Font("Arial", 13, FontStyle.Bold);
+        coordHeader.Parent = coordHeaderBand;
 
         var coordText = new TextObject
         {
             Text = detalhar
-                ? "[Quartos.Coordenadores.Nome] (Id: [Quartos.Coordenadores.IdInscricao], [Quartos.Coordenadores.Cidade]/[Quartos.Coordenadores.UF])"
-                : "[Quartos.Coordenadores.Nome]",
+               ? "[Divisoes.Coordenadores.Nome] (Id: [Quartos.Coordenadores.IdInscricao], [Quartos.Coordenadores.Cidade]/[Quartos.Coordenadores.UF])"
+               : "[Divisoes.Coordenadores.Nome]",
             Left = CM * 0.5f,
             Top = 0,
             Width = CM * 16.5f,
             Height = CM * 0.4f
         };
         coordText.CreateUniqueName();
-        coordText.Font = new Font("Arial", 10);
-        coordBand.Objects.Add(coordText);
+        coordText.Font = new Font("Arial", 12);
+        coordText.Parent = coordBand;
 
-        dataBand.Objects.Add(coordBand);
 
-        posY += CM * 2; // espaço reservado para a databnd (aproximado)
+        var partBand = new DataBand();
+        partBand.CreateUniqueName();
+        partBand.DataSource = report.GetDataSource("Quartos.Participantes");
+        partBand.Height = CM * 0.7f;
+        partBand.Left = MARGIN;
+        partBand.Width = CM * 17;
+        partBand.PageBreak = false;
+        partBand.Parent = dataBand;
 
-        // ===== ESPAÇO =====
-        posY += CM * 0.5f;
+        var partHeaderBand = new DataHeaderBand();
+        partHeaderBand.Height = CM * 1;
+        partHeaderBand.CreateUniqueName();
+        partHeaderBand.Parent = partBand;
 
-        // ===== TÍTULO PARTICIPANTES =====
         var partHeader = new TextObject
         {
             Text = "Participantes:",
             Left = MARGIN,
-            Top = posY,
+            Top = CM * 0.25f,
             Width = CM * 17,
-            Height = CM * 0.5f
+            Height = CM * 0.5f,
         };
         partHeader.CreateUniqueName();
-        partHeader.Font = new Font("Arial", 11, FontStyle.Bold);
-        dataBand.Objects.Add(partHeader);
-
-        posY += CM * 0.6f;
-
-        // ===== DATABND PARTICIPANTES =====
-        var partBand = new DataBand();
-        partBand.CreateUniqueName();
-        partBand.DataSource = report.GetDataSource("Quartos.Participantes");
-        partBand.Height = CM * 0.4f;
-        partBand.Left = MARGIN;
-        partBand.Top = posY;
-        partBand.Width = CM * 17;
-        partBand.PageBreak = false;
+        partHeader.Font = new Font("Arial", 13, FontStyle.Bold);
+        partHeader.Parent = partHeaderBand;
 
         var partText = new TextObject
         {
@@ -220,12 +215,35 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
             Height = CM * 0.4f
         };
         partText.CreateUniqueName();
-        partText.Font = new Font("Arial", 10);
-        partBand.Objects.Add(partText);
+        partText.Font = new Font("Arial", 12);
+        partText.Parent = partBand;
 
-        dataBand.Objects.Add(partBand);
+        ///
 
-        // Adicionar DataBand à página
-        page.Bands.Add(dataBand);
+        var partFooterBand = new DataFooterBand();
+        partFooterBand.Height = CM * 1;
+        partFooterBand.CreateUniqueName();
+        partFooterBand.Parent = partBand;
+
+        var partFooter = new TextObject
+        {
+            Text = "Total Participantes: [TotalRegistrosParticipantes]",
+            Left = MARGIN,
+            Top = CM * 0.25f,
+            Width = CM * 17,
+            Height = CM * 0.5f,
+        };
+        partFooter.CreateUniqueName();
+        partFooter.Font = new Font("Arial", 13, FontStyle.Bold);
+        partFooter.Parent = partFooterBand;
+
+        var reportTotal = new Total();
+        reportTotal.Name = "TotalRegistrosParticipantes";
+        reportTotal.TotalType = TotalType.Count;
+        reportTotal.Expression = "[Quartos.Participantes]";
+        reportTotal.Evaluator = partBand;
+        reportTotal.PrintOn = partHeaderBand;
+
+        report.Dictionary.Totals.Add(reportTotal);
     }
 }

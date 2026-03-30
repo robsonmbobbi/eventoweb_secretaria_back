@@ -54,7 +54,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Bag(x => x.TipoParticipantes, m =>
             {
                 m.Access(Accessor.NoSetter);
-                m.Cascade(Cascade.All | Cascade.DeleteOrphans);
+                m.Cascade(Cascade.All);
                 m.Key(k =>
                 {
                     k.Column("id_atividade");
@@ -66,7 +66,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Bag(x => x.Divisoes, m =>
             {
                 m.Access(Accessor.NoSetter);
-                m.Cascade(Cascade.All | Cascade.DeleteOrphans);
+                m.Cascade(Cascade.All);
                 m.Key(k =>
                 {
                     k.Column("id_atividade");

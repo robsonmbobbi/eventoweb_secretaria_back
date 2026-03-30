@@ -9,14 +9,16 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
 {
     public class DivisaoAtividadeParticipante : Entidade
     {
-        public DivisaoAtividadeParticipante(Inscricao inscricao, bool ehCoordenador)
+        public DivisaoAtividadeParticipante(DivisaoAtividade divisao, Inscricao inscricao, bool ehCoordenador)
         {
+            Divisao = divisao;
             Inscricao = inscricao;
             EhCoordenador = ehCoordenador;
         }
 
         protected DivisaoAtividadeParticipante() { }
 
+        public virtual DivisaoAtividade Divisao { get; protected set; }
         public virtual Inscricao Inscricao { get; protected set; }
         public virtual bool EhCoordenador { get; protected set; }
     }

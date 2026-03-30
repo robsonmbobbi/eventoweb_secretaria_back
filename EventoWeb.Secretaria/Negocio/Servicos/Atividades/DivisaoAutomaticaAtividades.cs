@@ -21,18 +21,24 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.Atividades
         public void Dividir(Atividade atividade)
         {
             var participantes = m_Inscricoes.ListarPorSituacao(m_Evento.Id, EnumSituacaoInscricao.Aceita);
+            participantes = participantes
+                .Where(x => x is InscricaoParticipante part && (part.Tipo! == EnumTipoParticipante.Participante || part.Tipo! == EnumTipoParticipante.ParticipanteTrabalhador))
+                .ToList();
 
-            IList<DivisaoAtividade> divisoes = atividade.Divisoes.ToList();
+            IList <DivisaoAtividade> divisoes = atividade.Divisoes.ToList();
             if (!divisoes.Any())
                 throw new InvalidOperationException("Não há divisões de atividade.");
 
             foreach (var divisao in divisoes)
                 divisao.RemoverTodosParticipantesNaoCoordenadores();
 
+            var coordenadores = divisoes.SelectMany(x => x.Participantes);
+            participantes = participantes.Where(x => !coordenadores.Any(c => c.Inscricao.Id == x.Id)).ToList();
+
             int indiceDivisao = 0;
 
             foreach (var participante in participantes
-                                            .OrderByDescending(x => x.Pessoa.DataNascimento)
+                                            .OrderByDescending(x => x.Pessoa.DataNascimento.Data)
                                             .ThenBy(x=>x.Pessoa.Cidade))
             {
                 divisoes[indiceDivisao].AdicionarParticipante(participante);
