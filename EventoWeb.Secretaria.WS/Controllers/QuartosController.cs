@@ -25,7 +25,7 @@ namespace EventoWeb.Secretaria.WS.Controllers
         /// <param name="idEvento">ID do evento para o qual será realizada a divisão.</param>
         /// <returns>Lista de quartos com os inscritos atribuídos a cada um.</returns>
         [HttpPost("dividir-inscricoes/{idEvento}")]
-        [Authorize("Bearer")]
+        //[Authorize("Bearer")]
         public ActionResult<List<DTOQuarto>> DividirInscricoes(int idEvento)
         {
             try
@@ -51,7 +51,7 @@ namespace EventoWeb.Secretaria.WS.Controllers
         /// <param name="detalhar">Se true, inclui ID de inscrição, cidade e UF no relatório.</param>
         /// <returns>Arquivo PDF para download.</returns>
         [HttpGet("relatorio/{idEvento}")]
-        [Authorize("Bearer")]
+        //[Authorize("Bearer")]
         public async Task<IActionResult> GerarRelatorioAsync(int idEvento, [FromQuery] bool detalhar = false)
         {
             try

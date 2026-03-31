@@ -8,29 +8,27 @@ namespace EventoWeb.Secretaria.Persistencia.Repositorios
 {
     public class QuartosNH : PersistenciaNH<Quarto>, IQuartos
     {
-        private readonly ISession mSessao;
-
         public QuartosNH(NHibernate.ISession sessao) : base(sessao)
         {
         }
 
         public IList<Quarto> ListarTodosQuartosPorEvento(int idEvento)
         {
-            return mSessao.QueryOver<Quarto>()
+            return Sessao.QueryOver<Quarto>()
                 .Where(quarto => quarto.Evento.Id == idEvento)
                 .List();
         }
 
         public Quarto ObterQuartoPorIdEventoEQuarto(int idEvento, int idQuarto)
         {
-            return mSessao.QueryOver<Quarto>()
+            return Sessao.QueryOver<Quarto>()
                 .Where(quarto => quarto.Evento.Id == idEvento && quarto.Id == idQuarto)
                 .SingleOrDefault();
         }
 
         public Boolean HaOutroQuartoComCapacidadeInfinita(Quarto quarto)
         {
-            return mSessao.QueryOver<Quarto>()
+            return Sessao.QueryOver<Quarto>()
                 .Where(x => x.Id != quarto.Id && x.Sexo == quarto.Sexo && x.EhFamilia == quarto.EhFamilia &&
                     x.Capacidade == null)
                 .RowCount() > 0;
@@ -38,7 +36,7 @@ namespace EventoWeb.Secretaria.Persistencia.Repositorios
 
         public IList<Quarto> ListarTodosQuartosPorEventoComParticipantes(int idEvento)
         {
-            return mSessao.QueryOver<Quarto>()
+            return Sessao.QueryOver<Quarto>()
                 .Where(quarto => quarto.Evento.Id == idEvento)
                 .Left.JoinQueryOver(x => x.Inscritos)
                 .TransformUsing(Transformers.DistinctRootEntity)
@@ -47,7 +45,7 @@ namespace EventoWeb.Secretaria.Persistencia.Repositorios
 
         public Quarto? BuscarQuartoDoInscrito(int idEvento, int idInscricao)
         {
-            var quartoInscrito = mSessao.QueryOver<QuartoInscrito>()
+            var quartoInscrito = Sessao.QueryOver<QuartoInscrito>()
                 .Where(x => x.Inscricao.Id == idInscricao)
                 .JoinQueryOver(x => x.Quarto)
                 .Where(x => x.Evento.Id == idEvento)

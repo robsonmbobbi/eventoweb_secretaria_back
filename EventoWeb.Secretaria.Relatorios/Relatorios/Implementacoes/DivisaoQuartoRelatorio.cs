@@ -85,7 +85,7 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
                 var modeloParticipante = new ModeloParticipante
                 {
                     IdInscricao = quartoInscrito.Inscricao.Id,
-                    Nome = pessoa.Nome.ToString(),
+                    Nome = pessoa.Nome.Nome,
                     Cidade = detalhar ? pessoa.Cidade : null,
                     UF = detalhar ? pessoa.UF : null,
                     EhCoordenador = quartoInscrito.EhCoordenador
@@ -118,7 +118,7 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
         var dataBand = new DataBand();
         dataBand.CreateUniqueName();
         dataBand.DataSource = report.GetDataSource("Quartos");
-        dataBand.Height = CM * 16; // altura aproximada para múltiplas linhas
+        dataBand.Height = CM * 0.75f; // altura aproximada para múltiplas linhas
         dataBand.StartNewPage = true; // quebra de página após cada quarto
         dataBand.Parent = page;
 
@@ -166,8 +166,8 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
         var coordText = new TextObject
         {
             Text = detalhar
-               ? "[Divisoes.Coordenadores.Nome] (Id: [Quartos.Coordenadores.IdInscricao], [Quartos.Coordenadores.Cidade]/[Quartos.Coordenadores.UF])"
-               : "[Divisoes.Coordenadores.Nome]",
+               ? "[Quartos.Coordenadores.Nome] (Id: [Quartos.Coordenadores.IdInscricao], [Quartos.Coordenadores.Cidade]/[Quartos.Coordenadores.UF])"
+               : "[Quartos.Coordenadores.Nome]",
             Left = CM * 0.5f,
             Top = 0,
             Width = CM * 16.5f,
