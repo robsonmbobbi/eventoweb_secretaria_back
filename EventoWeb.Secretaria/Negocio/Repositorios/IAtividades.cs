@@ -6,6 +6,6 @@ namespace EventoWeb.Secretaria.Negocio.Repositorios;
 
 public interface IAtividades : IPersistencia<Atividade>
 {
-
+    IList<DivisaoAtividadeParticipante> ObterDivisaoParticipante(int idInscricao);
 }
 

@@ -10,4 +10,11 @@ public class AtividadesNH : PersistenciaNH<Atividade>, IAtividades
     public AtividadesNH(ISession sessao) : base(sessao)
     {
     }
+
+    public IList<DivisaoAtividadeParticipante> ObterDivisaoParticipante(int idInscricao)
+    {
+        return Sessao.QueryOver<DivisaoAtividadeParticipante>()
+            .Where(x => x.Inscricao.Id == idInscricao)
+            .List();
+    }
 }

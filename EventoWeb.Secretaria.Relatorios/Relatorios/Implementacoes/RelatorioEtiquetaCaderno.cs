@@ -10,9 +10,9 @@ using iText.Layout.Element;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
-    public class RelatorioEtiquetaCaderno : IGeradorEtiqueta<IList<DadosCadernoInscrito>>
+    public class RelatorioEtiquetaCaderno : IGeradorEtiqueta<IEnumerable<DadosCadernoInscrito>>
     {
-        public byte[] GerarPdf(IList<DadosCadernoInscrito> inscritos)
+        public byte[] GerarPdf(IEnumerable<DadosCadernoInscrito> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -39,10 +39,8 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
             var linha = 1;
             var qualEtiqueta = 1;
 
-            for (var indice = 1; indice <= inscritos.Count(); indice++)
+            foreach (var inscricao in inscritos)
             {
-                var inscricao = inscritos[indice - 1];
-
                 if (qualEtiqueta == 1)
                     posicaoX = 6.1f.MillimetersToPointsTextSharp();
                 else

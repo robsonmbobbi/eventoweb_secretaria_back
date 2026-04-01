@@ -10,9 +10,9 @@ using iText.Layout.Element;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
-    public class RelatorioEtiquetaCracha : IGeradorEtiqueta<IList<Inscricao>>
+    public class RelatorioEtiquetaCracha : IGeradorEtiqueta<IEnumerable<Inscricao>>
     {
-        public byte[] GerarPdf(IList<Inscricao> inscritos)
+        public byte[] GerarPdf(IEnumerable<Inscricao> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -37,10 +37,8 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
             var qualEtiqueta = 1;
             var linha = 1;
 
-            for (var indice = 1; indice <= inscritos.Count(); indice++)
+            foreach (var inscricao in inscritos)
             {
-                var inscricao = inscritos[indice - 1];
-
                 if (qualEtiqueta == 1)
                     posicaoX = 5f.MillimetersToPointsTextSharp();
                 else

@@ -181,6 +181,10 @@ builder.Services.AddScoped<IRelatorioGerador<Atividade>, DivisaoAtividadeRelator
 builder.Services.AddScoped<AppDivisaoAtividadeRelatorio>();
 builder.Services.AddScoped<IRelatorioGerador<IList<Quarto>>, DivisaoQuartoRelatorio>();
 builder.Services.AddScoped<AppRelatorioQuartos>();
+builder.Services.AddScoped<IGeradorEtiqueta<IEnumerable<Inscricao>>, RelatorioEtiquetaCracha>();
+builder.Services.AddScoped<AppEtiquetasCracha>();
+builder.Services.AddScoped<IGeradorEtiqueta<IEnumerable<DadosCadernoInscrito>>, RelatorioEtiquetaCaderno>();
+builder.Services.AddScoped<AppEtiquetasCaderninho>();
 
 // Quartos
 builder.Services.AddScoped<AppDivisaoAutomaticaQuartos>();
