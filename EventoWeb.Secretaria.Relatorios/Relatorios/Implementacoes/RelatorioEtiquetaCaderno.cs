@@ -17,7 +17,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
     public class RelatorioEtiquetaCaderno
     {
-        public Stream Gerar(IList<CrachaInscrito> inscritos)
+        public Stream Gerar(IList<Inscricao> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -54,14 +54,6 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
                     posicaoX = 112.8f.MillimetersToPointsTextSharp();
 
                 posicaoY = PosicaoYInicial - (AlturaEtiqueta * linha + MargemSuperior).MillimetersToPointsTextSharp();
-
-                /*pdfCanvas.Rectangle(new Rectangle(
-                        posicaoX, //x inicial 
-                        posicaoY, // y inicial
-                        LarguraEtiqueta.MillimetersToPointsTextSharp(), //x final
-                        (AlturaEtiqueta - MargemSuperior).MillimetersToPointsTextSharp())
-                    );
-                pdfCanvas.Stroke();*/
 
                 var canvas = new Canvas(
                     page,

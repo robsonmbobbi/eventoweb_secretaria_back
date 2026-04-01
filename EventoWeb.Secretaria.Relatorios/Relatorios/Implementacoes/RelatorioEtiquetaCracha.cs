@@ -10,7 +10,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
     public class RelatorioEtiquetaCracha
     {
-        public Stream Gerar(IList<CrachaInscrito> inscritos)
+        public Stream Gerar(IList<Inscricao> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -46,15 +46,6 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 
                 posicaoY = PosicaoYInicial - (AlturaEtiqueta * linha + MargemSuperior).MillimetersToPointsTextSharp();
 
-                /*pdfCanvas.Rectangle(new Rectangle(
-                        posicaoX, //x inicial 
-                        posicaoY, // y inicial
-                        LarguraEtiqueta.MillimetersToPointsTextSharp(), //x final
-                        (AlturaEtiqueta - MargemSuperior).MillimetersToPointsTextSharp()
-                        )
-                    );
-                pdfCanvas.Stroke();*/
-
                 var canvas = new Canvas(
                     page,
                     new Rectangle(
@@ -67,7 +58,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 
                 canvas.Add(
                     new Paragraph(
-                            (String.IsNullOrWhiteSpace(inscricao.NomeConhecido) ? inscricao.Nome : inscricao.NomeConhecido) + "\n")
+                            (String.IsNullOrWhiteSpace(inscricao.NomeCracha) ? inscricao.Pessoa.Nome.Nome : inscricao.NomeCracha) + "\n")
                         .SetFont(fonteTitulo)
                         .SetFontSize(20)
                         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
@@ -75,7 +66,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 
                 canvas.Add(
                      new Paragraph(
-                            inscricao.Cidade + "/" + inscricao.UF)
+                            inscricao.Pessoa.Cidade + "/" + inscricao.Pessoa.UF)
                         .SetFont(fonteCidade)
                         .SetFontSize(14)
                         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
