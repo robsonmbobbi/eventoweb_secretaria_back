@@ -1,4 +1,5 @@
-﻿using EventoWeb.Nucleo.Negocio.Repositorios;
+﻿using EventoWeb.Comum.Negocio.Entidades;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -6,18 +7,12 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.StyledXmlParser.Jsoup.Nodes;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
-    public class RelatorioEtiquetaCaderno
+    public class RelatorioEtiquetaCaderno : IGeradorEtiqueta<IList<DadosCadernoInscrito>>
     {
-        public Stream Gerar(IList<Inscricao> inscritos)
+        public byte[] GerarPdf(IList<DadosCadernoInscrito> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -64,8 +59,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
                         (AlturaEtiqueta - MargemSuperior).MillimetersToPointsTextSharp())
                     );
 
-                var paragrafoNome = new Paragraph(
-                    (String.IsNullOrWhiteSpace(inscricao.NomeConhecido) ? inscricao.Nome : inscricao.NomeConhecido))
+                var paragrafoNome = new Paragraph(inscricao.Nome)
                     .SetFont(fonteBold)
                     .SetFontSize(tamanhoFonteTitulo)
                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT)
@@ -88,28 +82,12 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
                         .Add(new Text(inscricao.Quarto + " ").SimulateItalic());
                 }
 
-                if (!String.IsNullOrEmpty(inscricao.SalaEstudo))
+                foreach (var atividade in inscricao.Atividades)
                 {
                     paragrafoInformacoes
-                        .Add(new Text("Sala: ").SimulateBold());
+                        .Add(new Text($"{atividade.NomeAtividade}: ").SimulateBold());
                     paragrafoInformacoes
-                        .Add(new Text(inscricao.SalaEstudo + " ").SimulateItalic());
-                }
-
-                if (!String.IsNullOrEmpty(inscricao.Afrac))
-                {
-                    paragrafoInformacoes
-                        .Add(new Text("Oficina: ").SimulateBold());
-                    paragrafoInformacoes
-                        .Add(new Text(inscricao.Afrac + " ").SimulateItalic());
-                }
-
-                if (!String.IsNullOrEmpty(inscricao.Departamento))
-                {
-                    paragrafoInformacoes
-                        .Add(new Text("Departamento: ").SimulateBold());
-                    paragrafoInformacoes
-                        .Add(new Text(inscricao.Departamento + " ").SimulateItalic());
+                        .Add(new Text($"{atividade.NomeDivisao} ").SimulateItalic());
                 }
 
                 canvas.Add(paragrafoNome);
@@ -134,106 +112,10 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
                     qualEtiqueta++;
             }
 
-            /*var documento = new Document(new iTextSharp.text.Rectangle(PageSize.LETTER),
-                Utilities.MillimetersToPoints(4f),
-                Utilities.MillimetersToPoints(4f),
-                Utilities.MillimetersToPoints(11.4f),
-                Utilities.MillimetersToPoints(0f));
-            var escritorPDF = PdfWriter.GetInstance(documento, stream);
-
-            documento.Open();
-
-            PdfContentByte cb = escritorPDF.DirectContent;
-
-            var fonteTitulo = new Font(Font.FontFamily.HELVETICA, 11, (int)System.Drawing.FontStyle.Bold);
-            var fonteNormal = new Font(Font.FontFamily.HELVETICA, 10, (int)System.Drawing.FontStyle.Italic);
-            var fonteNormalBold = new Font(Font.FontFamily.HELVETICA, 10, (int)System.Drawing.FontStyle.Bold);
-
-            const float LarguraEtiqueta = 101.6f;
-            const float AlturaEtiqueta = 25.4f;
-            const float MargemSuperior = 0.4f;
-            const int TotalLinhasPag = 10;
-            var PosicaoYInicial = PageSize.LETTER.Height - Utilities.MillimetersToPoints(14.6f);
-
-            var posicaoY = 0f;
-            var posicaoX = 0f;
-
-            var linha = 1;
-            var qualEtiqueta = 1;
-
-            for (var indice = 1; indice <= inscritos.Count(); indice++)
-            {
-                var inscricao = inscritos[indice - 1];
-
-                if (qualEtiqueta == 1)
-                    posicaoX = Utilities.MillimetersToPoints(6.1f);
-                else
-                    posicaoX = Utilities.MillimetersToPoints(112.8f);
-
-                posicaoY = PosicaoYInicial - Utilities.MillimetersToPoints(AlturaEtiqueta * linha - 1 + MargemSuperior);
-
-                var coluna = new ColumnText(cb);
-                coluna.Alignment = Element.ALIGN_CENTER;
-                coluna.SetSimpleColumn(
-                    posicaoX, //x inicial 
-                    posicaoY, // y inicial
-                    posicaoX + Utilities.MillimetersToPoints(LarguraEtiqueta), //x final
-                    posicaoY + Utilities.MillimetersToPoints(AlturaEtiqueta - MargemSuperior));
-
-                var paragrafoNome = new Paragraph(
-                    (String.IsNullOrWhiteSpace(inscricao.NomeConhecido) ? inscricao.Nome : inscricao.NomeConhecido),
-                    fonteTitulo);
-
-                paragrafoNome.Alignment = Element.ALIGN_LEFT;
-                var paragrafoInformacoes = new Paragraph();
-                paragrafoInformacoes.Alignment = Element.ALIGN_LEFT;
-
-                if (!String.IsNullOrEmpty(inscricao.Quarto))
-                {
-                    paragrafoInformacoes.Add(new Chunk("Quarto: ", fonteNormalBold));
-                    paragrafoInformacoes.Add(new Chunk(inscricao.Quarto + " ", fonteNormal));
-                }
-
-                if (!String.IsNullOrEmpty(inscricao.SalaEstudo))
-                {
-                    paragrafoInformacoes.Add(new Chunk("Sala: ", fonteNormalBold));
-                    paragrafoInformacoes.Add(new Chunk(inscricao.SalaEstudo + " ", fonteNormal));
-                }
-
-                if (!String.IsNullOrEmpty(inscricao.Afrac))
-                {
-                    paragrafoInformacoes.Add(new Chunk("Oficina: ", fonteNormalBold));
-                    paragrafoInformacoes.Add(new Chunk(inscricao.Afrac + " ", fonteNormal));
-                }
-
-                if (!String.IsNullOrEmpty(inscricao.Departamento))
-                {
-                    paragrafoInformacoes.Add(new Chunk("Departamento: ", fonteNormalBold));
-                    paragrafoInformacoes.Add(new Chunk(inscricao.Departamento, fonteNormal));
-                }
-
-                coluna.AddElement(paragrafoNome);
-                coluna.AddElement(paragrafoInformacoes);
-
-                coluna.Go();
-
-                if (qualEtiqueta == 2)
-                {
-                    qualEtiqueta = 1;
-                    linha = linha + 1;
-
-                    if (linha > TotalLinhasPag)
-                    {
-                        linha = 1;
-                        documento.NewPage();
-                    }
-                }
-                else
-                    qualEtiqueta = qualEtiqueta + 1;
-            }*/
-
             documentoPDF.Close();
-            return new MemoryStream(stream.GetBuffer());
+
+            using var memStream = new MemoryStream(stream.GetBuffer());
+            return memStream.ToArray();
         }
     }
 }

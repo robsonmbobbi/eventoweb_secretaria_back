@@ -1,4 +1,6 @@
-﻿using iText.IO.Font.Constants;
+﻿using EventoWeb.Comum.Negocio.Entidades;
+using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -8,9 +10,9 @@ using iText.Layout.Element;
 
 namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 {
-    public class RelatorioEtiquetaCracha
+    public class RelatorioEtiquetaCracha : IGeradorEtiqueta<IList<Inscricao>>
     {
-        public Stream Gerar(IList<Inscricao> inscritos)
+        public byte[] GerarPdf(IList<Inscricao> inscritos)
         {
             using var stream = new MemoryStream();
             using var pdfWriter = new PdfWriter(stream);
@@ -91,7 +93,9 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
             }
 
             documentoPDF.Close();
-            return new MemoryStream(stream.GetBuffer());
+
+            using var memStream = new MemoryStream(stream.GetBuffer());
+            return memStream.ToArray();
         }
     }
 }
