@@ -83,8 +83,16 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.Quartos
 
         public IList<Quarto> Dividir()
         {
+            //.Where(x=>x.Id >= 2 && x.Id <= 6).ToList()
+
             var quartos = mRepQuartos.ListarTodosQuartosPorEvento(mEvento.Id);
-            var listaInscricoes = mRepInscricoes.ListarTodasInscricoesAceitasComPessoasDormemEvento(mEvento.Id);
+
+            var inscritosQuartos = quartos.Where(x=> x.Id == 1 || x.Id >= 18).SelectMany(x=>x.Inscritos).ToList();
+            quartos = quartos.Where(x => x.Id >= 2 && x.Id <= 8).ToList();
+
+            var listaInscricoes = mRepInscricoes.ListarTodasInscricoesAceitasComPessoasDormemEvento(mEvento.Id)
+                .Where(x => !inscritosQuartos.Any(y => y.Inscricao.Id == x.Id))
+                .ToList();
 
             var criancas = listaInscricoes
                 .Where(x => x is InscricaoInfantil && x.Pessoa.DataNascimento!.CalcularIdadeEmAnos(mEvento.PeriodoRealizacaoEvento.DataInicial) <= 6)
