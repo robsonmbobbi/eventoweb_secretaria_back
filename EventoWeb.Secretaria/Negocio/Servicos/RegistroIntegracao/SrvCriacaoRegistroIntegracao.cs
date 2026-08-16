@@ -43,7 +43,7 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao
             var formaPagamento = m_FormasPagamento.Obter(idFormaPagamento) ?? throw new Exception($"Forma de pagamento com ID {idFormaPagamento} não encontrada.");
             var evento = m_Eventos.Obter(idEvento) ?? throw new Exception($"Evento com ID {idEvento} não encontrado.");
 
-            var integracao = m_Integracoes.ObterPorFormaPagamento(formaPagamento);
+            var integracao = m_Integracoes.ObterPorFormaPagamento(formaPagamento.Evento.Id, formaPagamento.Id);
             if (integracao == null)
                 throw new Exception($"Não existe integração configurada para a forma de pagamento: {formaPagamento.Id}");
 
@@ -56,12 +56,13 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao
 
             // Criar registro de integração com o valor informado
             var registroIntegracao = new RegistroIntegracaoFinanceira(
+                integracao.Evento,
                 integracao.Integrador,
                 conta,
                 new ValorMonetario(valor),
                 formaPagamento.Tipo,
-                retornoIntegracao.IdTransacao,
-                numeroParcelas
+                new (retornoIntegracao.IdTransacao),
+                new (numeroParcelas ?? 1)
             );
 
             // Persistir registro

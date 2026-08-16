@@ -25,7 +25,7 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao
             var integradorExterno = m_IntegracoesExternas[registro.Integrador.IntegracaoExterna];
 
             var retorno = integradorExterno
-                .ConsultarCobranca(registro.Integrador, registro.IdentificacaoNoIntegrador)
+                .ConsultarCobranca(registro.Integrador, registro.IdentificacaoNoIntegrador.Valor)
                 .Result;
 
             return retorno;

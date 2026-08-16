@@ -8,10 +8,10 @@ namespace EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao
         {
             return new DTORegistroIntegracaoLog
             {
-                Mensagem = log.Mensagem,
+                Mensagem = log.Mensagem.Valor,
                 Tipo = log.Tipo,
                 Data = log.Data,
-                Dados = log.Dados
+                Dados = log.Dados?.Valor
             };
         }
     }

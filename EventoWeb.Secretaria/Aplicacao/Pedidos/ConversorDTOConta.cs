@@ -12,10 +12,10 @@ namespace EventoWeb.Secretaria.Aplicacao.Pedidos
                 Valor = conta.Valor.Valor,
                 DataVencimento = conta.DataVencimento,
                 Liquidado = conta.Liquidado,
-                ValorTotalTransacoes = conta.ValorTotalTransacoes,
-                ValorTotalDesconto = conta.ValorTotalDesconto,
-                ValorTotalJuros = conta.ValorTotalJuros,
-                ValorTotalMulta = conta.ValorTotalMulta
+                ValorTotalTransacoes = conta.ValorTotalTransacoes.Valor,
+                ValorTotalDesconto = conta.ValorTotalDesconto.Valor,
+                ValorTotalJuros = conta.ValorTotalJuros.Valor,
+                ValorTotalMulta = conta.ValorTotalMulta.Valor
             };
         }
     }

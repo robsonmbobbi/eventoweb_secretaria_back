@@ -9,7 +9,7 @@ public static class ConversaoContaBancaria
         return new DTOContaBancaria
         {
             Id = contaBancaria.Id,
-            NomeConta = contaBancaria.NomeConta.Nome
+            NomeConta = contaBancaria.NomeConta.Valor
         };
     }
 }

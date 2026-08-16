@@ -12,11 +12,11 @@ public static class ConversaoInscricaoListagem
         return new DTOInscricaoListagem
         {
             Id = inscricao.Id,
-            Nome = inscricao.Pessoa.Nome.Nome,
+            Nome = inscricao.Pessoa.Nome.Valor,
             Tipo = inscricao is InscricaoParticipante ? EnumTipoInscricao.Adulto : EnumTipoInscricao.Infantil,
             Situacao = inscricao.Situacao,
-            Cidade = inscricao.Pessoa.Cidade,
-            UF = inscricao.Pessoa.UF,
+            Cidade = inscricao.Pessoa.Cidade.Valor,
+            UF = inscricao.Pessoa.UF.Sigla,
             Dormira = inscricao.DormeEvento,
             TipoParticipante = tipoParticipante
         };

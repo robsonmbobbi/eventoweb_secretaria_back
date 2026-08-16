@@ -9,12 +9,12 @@ namespace EventoWeb.Secretaria.Aplicacao.RegistrosIntegracao
             return new DTORegistroIntegracao
             {
                 Id = registro.Id,
-                IdentificacaoNoIntegrador = registro.IdentificacaoNoIntegrador,
+                IdentificacaoNoIntegrador = registro.IdentificacaoNoIntegrador.Valor,
                 Situacao = registro.Situacao,
                 Tipo = registro.Tipo,
                 Valor = registro.Valor.Valor,
                 DataRegistro = registro.DataRegistro,
-                NumeroParcelas = registro.NumeroParcelas,
+                NumeroParcelas = registro.NumeroParcelas?.Valor,
                 DataConcluidoAbortado = registro.DataConcluidoAbortado,
                 Logs = registro.Logs?.Select(l => l.Converter()).ToList() ?? new List<DTORegistroIntegracaoLog>()
             };

@@ -7,9 +7,9 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
     {
         public IList<AtividadeTipoParticipante> m_TipoParticipantes;
         public IList<DivisaoAtividade> m_Divisoes;
-        private NomeCompleto m_Nome;
+        private String200 m_Nome;
 
-        public Atividade(Evento evento, EnumTipoInscricao tipoInscricao, NomeCompleto nome) 
+        public Atividade(Evento evento, EnumTipoInscricao tipoInscricao, String200 nome) 
         { 
             Evento = evento;
             TipoInscricao = tipoInscricao;
@@ -22,7 +22,7 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
 
         public virtual Evento Evento { get; set; }
         
-        public virtual NomeCompleto Nome 
+        public virtual String200 Nome 
         {
             get => m_Nome;
             set

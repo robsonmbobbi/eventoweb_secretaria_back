@@ -58,7 +58,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 
                 canvas.Add(
                     new Paragraph(
-                            (String.IsNullOrWhiteSpace(inscricao.NomeCracha) ? inscricao.Pessoa.Nome.Nome : inscricao.NomeCracha) + "\n")
+                            (String.IsNullOrWhiteSpace(inscricao.NomeCracha?.Valor) ? inscricao.Pessoa.Nome.Valor : inscricao.NomeCracha!.Valor) + "\n")
                         .SetFont(fonteTitulo)
                         .SetFontSize(20)
                         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
@@ -66,7 +66,7 @@ namespace EventoWeb.Secretaria.Relatorios.Relatorios.Implementacoes
 
                 canvas.Add(
                      new Paragraph(
-                            inscricao.Pessoa.Cidade + "/" + inscricao.Pessoa.UF)
+                            inscricao.Pessoa.Cidade?.Valor + "/" + inscricao.Pessoa.UF?.Sigla)
                         .SetFont(fonteCidade)
                         .SetFontSize(14)
                         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)

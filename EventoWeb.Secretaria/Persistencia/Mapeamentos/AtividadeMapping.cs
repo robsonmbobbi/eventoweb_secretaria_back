@@ -42,7 +42,7 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Component(x => x.Nome, c =>
             {
                 c.Access(Accessor.NoSetter);
-                c.Property(y => y.Nome, m =>
+                c.Property(y => y.Valor, m =>
                 {
                     m.Access(Accessor.NoSetter);
                     m.Column("nome");

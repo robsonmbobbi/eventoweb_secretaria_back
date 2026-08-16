@@ -41,13 +41,13 @@ namespace EventoWeb.Secretaria.Persistencia.Mapeamentos
             Component(x => x.FaixaEtaria, c =>
             {
                 c.Access(Accessor.NoSetter);
-                c.Property(y => y.IdadeMin, m =>
+                c.Property(y => y.Minimo, m =>
                 {
                     m.Access(Accessor.NoSetter);
                     m.Column("faixa_etaria_min");
                     m.NotNullable(false);
                 });
-                c.Property(y => y.IdadeMax, m =>
+                c.Property(y => y.Maximo, m =>
                 {
                     m.Access(Accessor.NoSetter);
                     m.Column("faixa_etaria_max");

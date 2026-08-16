@@ -73,10 +73,10 @@ public class AppDivisaoAutomaticaAtividades : AppBase
                     .Select(dp => new DTOParticipanteDivisao
                     {
                         Id = dp.Inscricao.Id,
-                        Nome = dp.Inscricao.Pessoa.Nome.Nome,
+                        Nome = dp.Inscricao.Pessoa.Nome.Valor,
                         DataNascimento = dp.Inscricao.Pessoa.DataNascimento!.Data,
-                        Cidade = dp.Inscricao.Pessoa.Cidade,
-                        UF = dp.Inscricao.Pessoa.UF,
+                        Cidade = dp.Inscricao.Pessoa.Cidade.Valor,
+                        UF = dp.Inscricao.Pessoa.UF.Sigla,
                         EhCoordenador = dp.EhCoordenador
                     })
                     .ToList()

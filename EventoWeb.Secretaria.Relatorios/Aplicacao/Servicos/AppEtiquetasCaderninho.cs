@@ -72,7 +72,7 @@ public class AppEtiquetasCaderninho
                 .ObterDivisaoParticipante(insc.Id)
                 .Select(p => new DadosAtividadeInscrito
                 {
-                    NomeAtividade = p.Divisao.Atividade.Nome.Nome,
+                    NomeAtividade = p.Divisao.Atividade.Nome.Valor,
                     NomeDivisao = p.Divisao.Nome
                 })
                 .ToList();
@@ -80,9 +80,9 @@ public class AppEtiquetasCaderninho
             return new DadosCadernoInscrito
             {
                 Id = insc.Id,
-                Nome = insc.Pessoa.Nome.Nome,
-                Cidade = insc.Pessoa.Cidade ?? string.Empty,
-                UF = insc.Pessoa.UF ?? string.Empty,
+                Nome = insc.Pessoa.Nome.Valor,
+                Cidade = insc.Pessoa.Cidade?.Valor ?? string.Empty,
+                UF = insc.Pessoa.UF?.Sigla ?? string.Empty,
                 Quarto = quarto?.Nome,
                 Atividades = atividades
             };

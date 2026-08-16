@@ -56,9 +56,9 @@ public class AppDivisaoAutomaticaQuartos : AppBase
                     .Select(qi => new DTOInscritoQuarto
                     {
                         Id = qi.Inscricao.Id,
-                        Nome = qi.Inscricao.Pessoa.Nome.Nome,
-                        Cidade = qi.Inscricao.Pessoa.Cidade,
-                        UF = qi.Inscricao.Pessoa.UF
+                        Nome = qi.Inscricao.Pessoa.Nome.Valor,
+                        Cidade = qi.Inscricao.Pessoa.Cidade.Valor,
+                        UF = qi.Inscricao.Pessoa.UF.Sigla
                     })
                     .ToList()
             };

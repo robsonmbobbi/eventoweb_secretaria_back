@@ -9,7 +9,7 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
         private Atividade m_Atividade;
         private string m_Nome;
         private IList<DivisaoAtividadeParticipante> m_Participantes;
-        private FaixaEtaria? m_FaixaEtaria;
+        private IntervaloInteiroPositivo? m_FaixaEtaria;
         private bool m_DeveSerParNumeroTotalParticipantes;
         private int? m_NumeroTotalParticipantes;
         private int? m_NumeroMinimoParticipantes;
@@ -43,7 +43,7 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
 
         public virtual IEnumerable<DivisaoAtividadeParticipante> Participantes { get { return m_Participantes; } }
 
-        public virtual FaixaEtaria FaixaEtaria
+        public virtual IntervaloInteiroPositivo? FaixaEtaria
         {
             get { return m_FaixaEtaria; }
             set
@@ -94,8 +94,8 @@ namespace EventoWeb.Secretaria.Negocio.Entidades.Atividades
                 var idade = DataAniversario.ObterIdadeAnos(participante.Pessoa.DataNascimento!.Data, m_Atividade.Evento.PeriodoRealizacaoEvento.DataInicial);
 
                 if (m_FaixaEtaria != null &&
-                    (idade < m_FaixaEtaria.IdadeMin ||
-                    idade > m_FaixaEtaria.IdadeMax))
+                    (idade < m_FaixaEtaria!.Minimo ||
+                    idade > m_FaixaEtaria!.Maximo))
                     throw new ArgumentException("Participante fora da faixa etária definida para esta sala.");
             }
 

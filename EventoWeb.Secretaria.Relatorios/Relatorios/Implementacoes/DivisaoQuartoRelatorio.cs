@@ -85,9 +85,9 @@ public class DivisaoQuartoRelatorio : IRelatorioGerador<IList<Quarto>>
                 var modeloParticipante = new ModeloParticipante
                 {
                     IdInscricao = quartoInscrito.Inscricao.Id,
-                    Nome = pessoa.Nome.Nome,
-                    Cidade = detalhar ? pessoa.Cidade : null,
-                    UF = detalhar ? pessoa.UF : null,
+                    Nome = pessoa.Nome.Valor,
+                    Cidade = detalhar ? pessoa.Cidade?.Valor : null,
+                    UF = detalhar ? pessoa.UF?.Sigla : null,
                     EhCoordenador = quartoInscrito.EhCoordenador
                 };
 

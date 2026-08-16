@@ -15,3 +15,6 @@
 /EventoWeb.Secretaria/bin/Release/net9.0
 /EventoWeb.Secretaria.Relatorios/bin/Debug/net9.0
 /EventoWeb.Secretaria.Relatorios/obj
+EventoWeb.Secretaria/bin/
+EventoWeb.Secretaria.Relatorios/bin/
+EventoWeb.Secretaria.WS/bin/

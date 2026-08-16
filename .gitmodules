@@ -1,0 +1,3 @@
+[submodule "external/eventoweb_comum_back"]
+	path = external/eventoweb_comum_back
+	url = https://github.com/robsonmbobbi/eventoweb_comum_back.git

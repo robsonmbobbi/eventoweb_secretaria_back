@@ -8,11 +8,11 @@ namespace eventoweb_secretaria_back.Controllers
     [ApiController]
     public class FormasPagamentoController (AppFormasPagamentoListagem appListagem) : ControllerBase
     {
-        [HttpGet("listar")]
+        [HttpGet("listar/{idEvento}")]
         [Authorize("Bearer")]
-        public IEnumerable<DTOFormaPagamento> Listar()
+        public IEnumerable<DTOFormaPagamento> Listar(int idEvento)
         {
-            return appListagem.ListarTodas();
+            return appListagem.ListarTodas(idEvento);
         }
 
     }

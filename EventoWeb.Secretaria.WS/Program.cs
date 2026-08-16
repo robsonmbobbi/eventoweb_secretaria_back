@@ -7,6 +7,7 @@ using EventoWeb.Comum.Negocio.Entidades;
 using EventoWeb.Comum.Negocio.Entidades.IntegracaoFinanceira;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Negocio.Servicos;
+using EventoWeb.Comum.Negocio.Servicos.Notificacoes;
 using EventoWeb.Comum.Negocio.Servicos.Notificacoes.Inscricoes;
 using EventoWeb.Comum.Persistencia.Integracoes.Asaas;
 using EventoWeb.Comum.Persistencia.Mapeamentos;
@@ -26,6 +27,7 @@ using EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos;
 using EventoWeb.Secretaria.Negocio.Servicos.RegistroIntegracao;
 using EventoWeb.Secretaria.Persistencia.Mapeamentos;
 using EventoWeb.Secretaria.Persistencia.MigracoesBD;
+using EventoWeb.Secretaria.Persistencia.Notificacoes;
 using EventoWeb.Secretaria.Persistencia.Repositorios;
 using EventoWeb.Secretaria.Relatorios.Aplicacao.Interfaces;
 using EventoWeb.Secretaria.Relatorios.Aplicacao.Servicos;
@@ -58,6 +60,18 @@ var nhDialect = databaseSection.GetValue<string>("Dialect")
                ?? "NHibernate.Dialect.MySQL5Dialect";
 var nhDriver = databaseSection.GetValue<string>("Driver")
               ?? "NHibernate.Driver.MySqlDataDriver";
+
+var rabbitMqSection = builder.Configuration.GetSection("RabbitMq");
+var configuracaoRabbitMq = new ConfiguracaoRabbitMqNotificacao
+{
+    HostName = rabbitMqSection.GetValue<string>("HostName") ?? "localhost",
+    Port = rabbitMqSection.GetValue<int?>("Port") ?? 5672,
+    UserName = rabbitMqSection.GetValue<string>("UserName") ?? "guest",
+    Password = rabbitMqSection.GetValue<string>("Password") ?? "guest",
+    VirtualHost = rabbitMqSection.GetValue<string>("VirtualHost") ?? "/",
+    RequestQueueName = rabbitMqSection.GetValue<string>("RequestQueueName") ?? "notificacoes.enviar",
+    ResponseQueueName = rabbitMqSection.GetValue<string>("ResponseQueueName") ?? "notificacoes.retorno"
+};
 
 var logFilePath = builder.Configuration["Logging:File:Path"];
 if (!string.IsNullOrWhiteSpace(logFilePath))
@@ -108,6 +122,11 @@ builder.Services.AddSingleton<IDictionary<EnumIntegracaoExterna, IIntegracaoExte
 
     return dict;
 });
+
+builder.Services.AddSingleton(configuracaoRabbitMq);
+builder.Services.AddSingleton<IEnvioNotificacao, EnvioNotificacaoRabbitMq>();
+builder.Services.AddSingleton<NotificacaoRespostaListenerService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<NotificacaoRespostaListenerService>());
 
 builder.Services.AddScoped((provider) => {
     var factory = provider.GetService<ISessionFactory>() ??

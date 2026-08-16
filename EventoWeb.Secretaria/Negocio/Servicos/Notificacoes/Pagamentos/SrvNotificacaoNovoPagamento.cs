@@ -4,14 +4,16 @@ using EventoWeb.Comum.Negocio.Entidades.Notificacoes;
 using EventoWeb.Comum.Negocio.ObjetosValor;
 using EventoWeb.Comum.Negocio.Repositorios;
 using EventoWeb.Comum.Negocio.Servicos;
+using EventoWeb.Comum.Negocio.Servicos.Notificacoes;
 using System.Text.Json;
 
 namespace EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos
 {
-    public class SrvNotificacaoNovoPagamento(IModelosMensagemNotificacao modelosNotificacao, IMensagens mensagens)
+    public class SrvNotificacaoNovoPagamento(IModelosMensagemNotificacao modelosNotificacao, IMensagens mensagens, IEnvioNotificacao envioNotificacao)
     {
         private readonly IModelosMensagemNotificacao m_ModelosNotificacao = modelosNotificacao;
         private readonly IMensagens m_Mensagens = mensagens;
+        private readonly IEnvioNotificacao m_EnvioNotificacao = envioNotificacao;
 
         public void Notificar(Pessoa pessoa, int idEvento, DadosRetornoIntegracaoExterna dadosRetorno)
         {
@@ -41,20 +43,22 @@ namespace EventoWeb.Secretaria.Negocio.Servicos.Notificacoes.Pagamentos
 
                 var mensagem = new MensagemNotificacao(
                     modelo,
-                    destinatario,
+                    new (destinatario ?? ""),
+                    new (
                     JsonSerializer.Serialize(
                         new
                         {
-                            NomeEvento = modelo.Evento.Nome.Nome,
+                            NomeEvento = modelo.Evento.Nome.Valor,
                             TipoTransacao = tipoTransacao,
-                            dadosRetorno.Valor,
+                            Valor = dadosRetorno.Valor,
                             dadosRetorno.LinkPagamento,
                             dadosRetorno.ImagemQRCodePixBase64,
                             dadosRetorno.PixCopiaECola
                         }
-                    )
+                    ))
                 );
                 m_Mensagens.Incluir(mensagem);
+                m_EnvioNotificacao.EnviarERegistrar(m_Mensagens, mensagem);
             }
         }
     }
